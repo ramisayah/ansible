@@ -1,0 +1,31 @@
+ processing module source ---> library/time
+.TH ANSIBLE.TIME 3 "2013-02-06" "unknown" "ANSIBLE MODULES"
+." generated from library/time
+.SH NAME
+time \- Show the current time
+." ------ DESCRIPTION
+.SH DESCRIPTION
+.PP
+Show the current time of system. It is copyed from the site offical of ANSIBLE, and used to only test the integration of a new module. 
+." ------ OPTIONS
+."
+."
+."
+."
+." ------ NOTES
+."
+."
+." ------ EXAMPLES
+.SH EXAMPLES
+.PP
+Show 'webservers' current time
+
+.nf
+ansible webservers -m time
+.fi
+." ------- AUTHOR
+.SH AUTHOR
+DU Yu
+.SH SEE ALSO
+.IR ansible (1),
+.I http://ansible.github.com/modules.html#time

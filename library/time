@@ -1,0 +1,53 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# 04/02/2013, DU Yu <duyu1226@gmail.com>
+#
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+DOCUMENTATION = '''
+---
+
+module: time
+short_description: Show the current time
+description:
+    - Show the current time of system. It is copyed from the site offical of ANSIBLE, and used to only test the integration of a new module.
+version_added: "0.0"
+author: DU Yu
+options: {}
+examples:
+    - code: ansible webservers -m time
+      description: Show 'webservers' current time
+
+'''
+
+import datetime
+
+def main():
+    module = AnsibleModule(
+	argument_spec = dict(),
+	supports_check_mode = False,
+    )
+    module.exit_json(time=str(datetime.datetime.now()))
+
+
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
+
+
