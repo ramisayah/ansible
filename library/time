@@ -26,7 +26,7 @@ DOCUMENTATION = '''
 module: time
 short_description: Show the current time
 description:
-    - Show the current time of system. It is copyed from the site offical of ANSIBLE, and used to only test the integration of a new module.
+    - Show the current time of system. It is only used to test the integration of a new module.
 version_added: "0.0"
 author: DU Yu
 options: {}
