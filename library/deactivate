@@ -1,0 +1,97 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2013, Yu DU <duyu1226@gmail.com>
+#
+# This file is part of Ansible
+#
+# Ansible is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Ansible is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import shutil
+
+DOCUMENTATION = '''
+---
+module: deactivate
+short_description: Deactivate a line by adding # at the beginning of this line.
+description:
+     - This module add # at the beginning of a line to deactivate it. This line is matched completely with the first argment, and it is found in a file remote indicated by the second argement. The function of 'match' isn't perfect yet.
+options:
+  match:
+    description:
+      - Complete text of the line to be deactivated, contained in a pair of quotation marks.
+    required: true
+    default: null
+    aliases: []
+  dest:
+    description:
+      - Absolute path of the Remote file.
+    required: true
+    default: null
+examples:
+   - code: "deactivate: match='127.0.0.1 localhost' dest=/etc/hosts"
+     description: "Find the file /etc/hosts in the remote machine, then add # at the beginning of the line '127.0.0.1 localhost'"
+author: Yu DU
+'''
+
+def main():
+
+    module = AnsibleModule(
+        # not checking because of daisy chain to file module
+        argument_spec = dict(
+            match=dict(required=True),
+            dest=dict(required=True),
+        ),
+        add_file_common_args=True,
+    )
+
+    match  = module.params['match']
+    dest = os.path.expanduser(module.params['dest'])   
+
+    if match is '':
+        module.fail_json(msg="Match is null" % (match))
+
+    
+    if os.path.exists(dest):
+        if not os.access(dest, os.W_OK):
+            module.fail_json(msg="Destination %s not writable" % (dest))
+        if not os.access(dest, os.R_OK):
+            module.fail_json(msg="Destination %s not readable" % (dest))
+        if (os.path.isdir(dest)):
+            basename = os.path.basename(src)
+            dest = os.path.join(dest, basename)
+    else:
+        if not os.path.exists(os.path.dirname(dest)):
+            module.fail_json(msg="Destination directory %s does not exist" % (os.path.dirname(dest)))
+        if not os.access(os.path.dirname(dest), os.W_OK):
+            module.fail_json(msg="Destination %s not writable" % (os.path.dirname(dest)))
+ 
+    
+    cmd_sed = "sed -ie 's/^"+match+"/#"+match+"/' "+dest
+
+    os.system(cmd_sed)
+
+
+    changed = False 
+    
+    res_args = dict(
+        dest = dest, match = match, sed = cmd_sed, changed = changed
+    )
+
+
+    module.exit_json(**res_args)
+
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
